@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Ticket Verification</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@0..1,400,0,0&display=swap"
+        rel="stylesheet" />
+    <!-- Ethers & Contract -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+    <script src="js/contract-service.js"></script>
+</head>
+
+<body class="bg-gray-50 flex flex-col min-h-screen items-center justify-center p-6">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
+        <div class="flex justify-center mb-6">
+            <div class="p-4 bg-blue-50 rounded-full">
+                <span class="material-symbols-outlined text-4xl text-blue-600">qr_code_scanner</span>
+            </div>
+        </div>
+
+        <h1 class="text-2xl font-bold text-center text-slate-800 mb-2">Verify Ticket</h1>
+        <p class="text-center text-slate-500 text-sm mb-8">Scan QR Code or Enter Token ID to verify ownership.</p>
+
+        <div class="flex flex-col gap-4">
+            <div>
+                <label class="text-xs font-bold uppercase text-slate-400">Token ID</label>
+                <input id="tokenIdInput" type="number"
+                    class="w-full mt-1 p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-mono"
+                    placeholder="e.g. 5" />
+            </div>
+
+            <button id="verifyBtn"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-blue-600/20 active:scale-95">
+                Check Validity
+            </button>
+        </div>
+
+        <!-- Result Area -->
+        <div id="resultArea" class="mt-8 hidden">
+            <!-- Valid State -->
+            <div id="validState" class="hidden flex flex-col items-center animate-bounce-in">
+                <span class="material-symbols-outlined text-6xl text-green-500 mb-2">check_circle</span>
+                <h2 class="text-xl font-bold text-green-600">Valid Ticket</h2>
+                <p class="text-slate-600 text-sm mt-1">Owner: <span id="ownerAddress"
+                        class="font-mono text-xs bg-slate-100 p-1 rounded"></span></p>
+            </div>
+
+            <!-- Invalid State -->
+            <div id="invalidState" class="hidden flex flex-col items-center">
+                <span class="material-symbols-outlined text-6xl text-red-500 mb-2">cancel</span>
+                <h2 class="text-xl font-bold text-red-600">Invalid / Not Found</h2>
+                <p class="text-slate-600 text-sm mt-1">This ticket does not exist or fetch failed.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const idParam = urlParams.get('id');
+            if (idParam) {
+                document.getElementById('tokenIdInput').value = idParam;
+            }
+
+            const btn = document.getElementById('verifyBtn');
+            const resultArea = document.getElementById('resultArea');
+            const validState = document.getElementById('validState');
+            const invalidState = document.getElementById('invalidState');
+            const ownerSpan = document.getElementById('ownerAddress');
+
+            btn.addEventListener('click', async () => {
+                const tokenId = document.getElementById('tokenIdInput').value;
+                if (!tokenId) return;
+
+                btn.innerText = "Checking...";
+                btn.disabled = true;
+                resultArea.classList.add('hidden');
+                validState.classList.add('hidden');
+                invalidState.classList.add('hidden');
+
+                if (await window.ContractService.init()) {
+                    try {
+                        // Call ownerOf from contract
+                        const owner = await window.ContractService.contract.ownerOf(tokenId);
+
+                        // If successful
+                        resultArea.classList.remove('hidden');
+                        validState.classList.remove('hidden');
+                        ownerSpan.innerText = owner;
+                    } catch (e) {
+                        // Likely invalid ID
+                        resultArea.classList.remove('hidden');
+                        invalidState.classList.remove('hidden');
+                    }
+                }
+                btn.innerText = "Check Validity";
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+
+</html>

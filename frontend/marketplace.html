@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>K-Pop NFT Ticket Marketplace</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Ethers.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+    <!-- Contract Service -->
+    <script src="js/contract-service.js"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4258c",
+                        "sidebar-bg": "#ffffff",
+                        "content-bg": "#ffffff",
+                        "card-bg": "#ffffff",
+                        "border-light": "#e2e8f0",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f4258c;
+        }
+
+        .soft-shadow {
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -4px rgba(244, 37, 140, 0.15);
+        }
+    </style>
+</head>
+
+<body class="bg-content-bg text-slate-900 font-display overflow-hidden">
+    <div class="flex h-screen w-full">
+        <aside class="w-72 flex flex-col border-r border-border-light bg-sidebar-bg hidden lg:flex shrink-0 z-20">
+            <div class="p-6 flex items-center gap-3 border-b border-border-light/50">
+                <div
+                    class="size-10 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center shadow-lg shadow-primary/30">
+                    <span class="material-symbols-outlined text-white text-xl">confirmation_number</span>
+                </div>
+                <h1 class="text-slate-900 text-lg font-bold tracking-wide">K-POP MARKET</h1>
+            </div>
+            <div class="flex-1 px-6 py-6 overflow-y-auto">
+                <div class="flex flex-col gap-8">
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Sort By</h3>
+                        <div class="space-y-2">
+                            <label
+                                class="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-primary/20 cursor-pointer">
+                                <input checked="" class="text-primary focus:ring-primary border-slate-300" name="sort"
+                                    type="radio" />
+                                <span class="text-sm font-medium text-slate-700">Lowest Price</span>
+                            </label>
+                            <label
+                                class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 border border-transparent cursor-pointer transition-colors">
+                                <input class="text-primary focus:ring-primary border-slate-300" name="sort"
+                                    type="radio" />
+                                <span class="text-sm font-medium text-slate-600">Highest Price</span>
+                            </label>
+                            <label
+                                class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 border border-transparent cursor-pointer transition-colors">
+                                <input class="text-primary focus:ring-primary border-slate-300" name="sort"
+                                    type="radio" />
+                                <span class="text-sm font-medium text-slate-600">Newest Listed</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Artist</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input checked=""
+                                    class="rounded border-slate-300 text-primary focus:ring-primary transition-colors"
+                                    type="checkbox" />
+                                <span
+                                    class="text-sm text-slate-600 group-hover:text-slate-900 font-medium">BLACKPINK</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input checked=""
+                                    class="rounded border-slate-300 text-primary focus:ring-primary transition-colors"
+                                    type="checkbox" />
+                                <span class="text-sm text-slate-600 group-hover:text-slate-900 font-medium">BTS</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input
+                                    class="rounded border-slate-300 text-primary focus:ring-primary transition-colors"
+                                    type="checkbox" />
+                                <span class="text-sm text-slate-600 group-hover:text-slate-900 font-medium">EXO</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input
+                                    class="rounded border-slate-300 text-primary focus:ring-primary transition-colors"
+                                    type="checkbox" />
+                                <span class="text-sm text-slate-600 group-hover:text-slate-900 font-medium">Twice</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">City</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input
+                                    class="rounded border-slate-300 text-primary focus:ring-primary transition-colors"
+                                    type="checkbox" />
+                                <span class="text-sm text-slate-600 group-hover:text-slate-900 font-medium">Seoul</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input
+                                    class="rounded border-slate-300 text-primary focus:ring-primary transition-colors"
+                                    type="checkbox" />
+                                <span class="text-sm text-slate-600 group-hover:text-slate-900 font-medium">Tokyo</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input
+                                    class="rounded border-slate-300 text-primary focus:ring-primary transition-colors"
+                                    type="checkbox" />
+                                <span class="text-sm text-slate-600 group-hover:text-slate-900 font-medium">Los
+                                    Angeles</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Price Range (ETH)
+                        </h3>
+                        <div class="px-2">
+                            <div class="h-1 bg-slate-100 rounded-full relative">
+                                <div class="absolute left-0 right-1/4 h-full bg-primary rounded-full"></div>
+                                <div
+                                    class="absolute left-0 top-1/2 -translate-y-1/2 size-4 bg-white border-2 border-primary rounded-full shadow cursor-pointer">
+                                </div>
+                                <div
+                                    class="absolute right-1/4 top-1/2 -translate-y-1/2 size-4 bg-white border-2 border-primary rounded-full shadow cursor-pointer">
+                                </div>
+                            </div>
+                            <div class="flex justify-between mt-3 text-xs font-medium text-slate-500">
+                                <span>0.01 ETH</span>
+                                <span>2.5 ETH</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <div class="flex-1 flex flex-col h-full overflow-hidden relative bg-content-bg">
+            <div
+                class="lg:hidden flex items-center justify-between p-4 border-b border-border-light bg-white sticky top-0 z-30">
+                <div class="flex items-center gap-2">
+                    <div
+                        class="size-8 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white text-sm">confirmation_number</span>
+                    </div>
+                    <h1 class="text-slate-900 font-bold">K-POP MARKET</h1>
+                </div>
+                <button class="text-slate-600 p-2">
+                    <span class="material-symbols-outlined">filter_list</span>
+                </button>
+            </div>
+            <header class="sticky top-0 z-50 w-full glass-panel bg-white/90 backdrop-blur-md border-b border-gray-100">
+                <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex h-20 items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                <span class="material-symbols-outlined"
+                                    style="font-size: 24px;">confirmation_number</span>
+                            </div>
+                            <span class="text-xl font-bold tracking-tight text-slate-900">K-Block<span
+                                    class="text-primary">.</span></span>
+                        </div>
+                        <nav class="hidden md:flex items-center gap-8">
+                            <a class="text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                                href="home.html">Home</a>
+                            <a class="text-sm font-medium text-slate-900 hover:text-primary transition-colors"
+                                href="marketplace.html">Marketplace</a>
+                            <a class="text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                                href="my-tickets.html">My Tickets</a>
+                            <a class="text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                                href="help.html">Help</a>
+                        </nav>
+                        <div class="flex items-center gap-4">
+                            <button
+                                class="flex items-center gap-2 rounded-full bg-gray-100 border border-gray-200 px-4 py-2 text-sm font-medium text-slate-900 hover:bg-gray-200 transition-colors">
+                                <span
+                                    class="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(74,222,128,0.6)]"></span>
+                                Sepolia
+                            </button>
+                            <button id="connectWalletBtn"
+                                class="hidden sm:flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-white transition-all hover:bg-primary-hover hover:scale-105 active:scale-95 shadow-lg shadow-primary/25">
+                                <span class="material-symbols-outlined"
+                                    style="font-size: 20px;">account_balance_wallet</span>
+                                <span>Connect Wallet</span>
+                            </button>
+                            <button class="md:hidden p-2 text-slate-500 hover:text-primary">
+                                <span class="material-symbols-outlined">menu</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <main class="flex-1 overflow-y-auto p-6 lg:p-8 bg-slate-50/50">
+                <div class="max-w-7xl mx-auto flex flex-col gap-6">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-slate-900">Recommended Tickets</h2>
+                        <div class="text-sm text-slate-500">Showing <span id="resultCount"
+                                class="font-bold text-slate-900">0</span> results</div>
+                    </div>
+                    <div id="marketplaceGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <!-- Dynamic Content -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="js/wallet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const grid = document.getElementById('marketplaceGrid');
+            const resultCount = document.getElementById('resultCount');
+
+            try {
+                const concerts = await window.ContractService.getAllConcerts();
+
+                // Update count
+                if (resultCount) resultCount.innerText = concerts.length;
+
+                if (concerts.length === 0) {
+                    grid.innerHTML = '<p class="text-slate-500 col-span-3 text-center py-10">No events found.</p>';
+                    return;
+                }
+
+                grid.innerHTML = '';
+                concerts.forEach(concert => {
+                    const card = document.createElement('div');
+                    card.className = "group bg-white rounded-2xl border border-slate-200 overflow-hidden transition-all duration-300 card-hover";
+                    card.innerHTML = `
+                        <div class="h-56 bg-cover bg-center relative"
+                            style="background-image: url('${concert.imageUrl}');">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60">
+                            </div>
+                            <div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-lg text-white text-xs font-bold border border-white/20 shadow-lg">
+                                ${concert.isActive ? 'ON SALE' : 'SOLD OUT'}
+                            </div>
+                        </div>
+                        <div class="p-5">
+                            <div class="mb-4">
+                                <h3 class="font-bold text-slate-900 text-xl mb-1">${concert.name}</h3>
+                                <p class="text-sm font-medium text-slate-500">${concert.artist}</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mb-6">
+                                <div class="flex items-center gap-2 text-slate-600">
+                                    <div class="size-8 rounded-full bg-slate-50 flex items-center justify-center text-primary">
+                                        <span class="material-symbols-outlined text-sm">location_on</span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-[10px] uppercase text-slate-400 font-bold tracking-wider">Venue</span>
+                                        <span class="text-xs font-semibold">${concert.venue}</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 text-slate-600">
+                                    <div class="size-8 rounded-full bg-slate-50 flex items-center justify-center text-primary">
+                                        <span class="material-symbols-outlined text-sm">calendar_month</span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <span class="text-[10px] uppercase text-slate-400 font-bold tracking-wider">Date</span>
+                                        <span class="text-xs font-semibold">${concert.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="border-t border-slate-100 pt-4 flex items-end justify-between">
+                                <div>
+                                    <p class="text-xs text-slate-400 font-medium uppercase mb-1">Price</p>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="material-symbols-outlined text-slate-900 filled text-lg">eco</span>
+                                        <span class="text-slate-900 font-bold text-xl">${concert.price} ETH</span>
+                                    </div>
+                                </div>
+                                <button id="buy-${concert.id}"
+                                    class="bg-primary hover:bg-pink-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-primary/20 transition-all transform active:scale-95 flex items-center gap-2">
+                                    <span>Buy Now</span>
+                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    // Add Mint Logic
+                    const buyBtn = card.querySelector(`#buy-${concert.id}`);
+                    buyBtn.addEventListener('click', async () => {
+                        buyBtn.innerText = "Minting...";
+                        buyBtn.disabled = true;
+                        try {
+                            const receipt = await window.ContractService.mintTicket(concert.id, concert.price);
+                            alert("Ticket Minted Successfully! Tx: " + receipt.hash);
+                            buyBtn.innerText = "Owned";
+                            buyBtn.className = "bg-green-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2 cursor-default";
+                        } catch (e) {
+                            alert("Mint Failed: " + (e.reason || e.message));
+                            buyBtn.innerText = "Buy Now";
+                            buyBtn.disabled = false;
+                        }
+                    });
+
+                    grid.appendChild(card);
+                });
+            } catch (e) {
+                console.error("Error loading events:", e);
+                grid.innerHTML = '<p class="text-red-500 col-span-3 text-center">Failed to load events from contract.</p>';
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Help Center (Light Mode)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4258c",
+                        "background-light": "#ffffff",
+                        "surface-light": "#ffffff",
+                        "surface-border": "#e2e8f0",
+                        "text-main": "#0f172a",
+                        "text-subtle": "#475569",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-light font-display text-text-main overflow-x-hidden min-h-screen flex flex-col">
+    <header class="sticky top-0 z-50 w-full glass-panel bg-white/90 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex h-20 items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <span class="material-symbols-outlined" style="font-size: 24px;">confirmation_number</span>
+                    </div>
+                    <span class="text-xl font-bold tracking-tight text-slate-900">K-Block<span
+                            class="text-primary">.</span></span>
+                </div>
+                <nav class="hidden md:flex items-center gap-8">
+                    <a class="text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                        href="home.html">Home</a>
+                    <a class="text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                        href="marketplace.html">Marketplace</a>
+                    <a class="text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                        href="my-tickets.html">My Tickets</a>
+                    <a class="text-sm font-medium text-slate-900 hover:text-primary transition-colors"
+                        href="help.html">Help</a>
+                </nav>
+                <div class="flex items-center gap-4">
+                    <button
+                        class="flex items-center gap-2 rounded-full bg-gray-100 border border-gray-200 px-4 py-2 text-sm font-medium text-slate-900 hover:bg-gray-200 transition-colors">
+                        <span class="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(74,222,128,0.6)]"></span>
+                        Sepolia
+                    </button>
+                    <button id="connectWalletBtn"
+                        class="hidden sm:flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-white transition-all hover:bg-primary-hover hover:scale-105 active:scale-95 shadow-lg shadow-primary/25">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">account_balance_wallet</span>
+                        <span>Connect Wallet</span>
+                    </button>
+                    <button class="md:hidden p-2 text-slate-500 hover:text-primary">
+                        <span class="material-symbols-outlined">menu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="flex-1 flex justify-center py-10 px-4 md:px-10">
+        <div class="flex flex-col max-w-[1080px] w-full gap-8">
+            <div class="flex flex-col gap-4 py-4 border-b border-surface-border">
+                <div class="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-wider">
+                    <span class="material-symbols-outlined text-lg">support_agent</span>
+                    <span>Help Center</span>
+                </div>
+                <h1 class="text-text-main text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em]">Web3
+                    Onboarding Guide</h1>
+                <p class="text-text-subtle text-lg font-normal leading-normal max-w-2xl">
+                    Welcome to the future of ticketing. Learn how to set up your digital wallet, get testnet currency,
+                    and secure your NFT concert tickets.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                <div class="lg:col-span-7 flex flex-col gap-6">
+                    <h2 class="text-text-main text-2xl font-bold leading-tight">Frequently Asked Questions</h2>
+                    <div class="flex flex-col gap-4">
+                        <details
+                            class="group flex flex-col rounded-xl border border-surface-border bg-white transition-all duration-300">
+                            <summary class="flex cursor-pointer items-center justify-between gap-6 p-6">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-open:bg-primary group-open:text-white transition-colors">
+                                        <span class="material-symbols-outlined">account_balance_wallet</span>
+                                    </div>
+                                    <p class="text-text-main text-lg font-bold leading-normal">How to Connect MetaMask
+                                    </p>
+                                </div>
+                                <span
+                                    class="material-symbols-outlined text-slate-400 group-open:rotate-180 transition-transform">expand_more</span>
+                            </summary>
+                            <div class="px-6 pb-6 pt-0 pl-[5.5rem]">
+                                <ol
+                                    class="list-decimal list-outside text-text-subtle text-base font-normal leading-relaxed space-y-2 marker:text-primary marker:font-bold">
+                                    <li>Download the MetaMask extension for your browser or mobile app.</li>
+                                    <li>Create a new wallet and securely save your Secret Recovery Phrase.</li>
+                                    <li>Click 'Connect Wallet' in the top right corner of this page.</li>
+                                    <li>Approve the connection request in the MetaMask pop-up.</li>
+                                </ol>
+                            </div>
+                        </details>
+                        <details
+                            class="group flex flex-col rounded-xl border border-surface-border bg-white transition-all duration-300"
+                            open="">
+                            <summary class="flex cursor-pointer items-center justify-between gap-6 p-6">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-open:bg-primary group-open:text-white transition-colors">
+                                        <span class="material-symbols-outlined">currency_bitcoin</span>
+                                    </div>
+                                    <p class="text-text-main text-lg font-bold leading-normal">How to get Sepolia ETH
+                                    </p>
+                                </div>
+                                <span
+                                    class="material-symbols-outlined text-slate-400 group-open:rotate-180 transition-transform">expand_more</span>
+                            </summary>
+                            <div class="px-6 pb-6 pt-0 pl-[5.5rem]">
+                                <p class="text-text-subtle text-base font-normal leading-relaxed pb-3">
+                                    Sepolia ETH is test currency used to pay for gas fees on the Sepolia Testnet. It has
+                                    no real-world value.
+                                </p>
+                                <ol
+                                    class="list-decimal list-outside text-text-subtle text-base font-normal leading-relaxed space-y-2 marker:text-primary marker:font-bold">
+                                    <li>Navigate to a supported Sepolia Faucet (e.g., Alchemy or Infura).</li>
+                                    <li>Copy your wallet address from MetaMask (starts with 0x...).</li>
+                                    <li>Paste your address into the faucet input field.</li>
+                                    <li>Click 'Send Me ETH' to receive your testnet funds within minutes.</li>
+                                </ol>
+                            </div>
+                        </details>
+                        <details
+                            class="group flex flex-col rounded-xl border border-surface-border bg-white transition-all duration-300">
+                            <summary class="flex cursor-pointer items-center justify-between gap-6 p-6">
+                                <div class="flex items-center gap-4">
+                                    <div
+                                        class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-open:bg-primary group-open:text-white transition-colors">
+                                        <span class="material-symbols-outlined">confirmation_number</span>
+                                    </div>
+                                    <p class="text-text-main text-lg font-bold leading-normal">What is an NFT Ticket?
+                                    </p>
+                                </div>
+                                <span
+                                    class="material-symbols-outlined text-slate-400 group-open:rotate-180 transition-transform">expand_more</span>
+                            </summary>
+                            <div class="px-6 pb-6 pt-0 pl-[5.5rem]">
+                                <p class="text-text-subtle text-base font-normal leading-relaxed">
+                                    An NFT Ticket is a unique digital asset stored on the blockchain that proves your
+                                    ownership of a seat at the event. Unlike paper tickets, it cannot be forged, and it
+                                    doubles as a digital collectible after the show!
+                                </p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+                <div class="lg:col-span-5 flex flex-col gap-6">
+                    <h2 class="text-text-main text-2xl font-bold leading-tight">Video Tutorials</h2>
+                    <div
+                        class="flex flex-col items-stretch justify-start rounded-xl shadow-lg shadow-gray-200/50 bg-white border border-surface-border overflow-hidden">
+                        <div class="relative w-full aspect-video group cursor-pointer">
+                            <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all z-10"></div>
+                            <div class="absolute inset-0 flex items-center justify-center z-20">
+                                <div
+                                    class="size-14 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-white/60 shadow-lg">
+                                    <span class="material-symbols-outlined text-white text-4xl ml-1">play_arrow</span>
+                                </div>
+                            </div>
+                            <div class="w-full h-full bg-center bg-no-repeat bg-cover"
+                                data-alt="Abstract vibrant digital gradient representing blockchain data flow"
+                                style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDWOSNyQ8sCZ4v_IL5C3U8LnNEnmz6BcjLnCdT2A1YNgz7BbRnDqDwEYYAen7i5PoBbizMJvqMtOhttBiSLaw5BPn4A5l8tT1IhfdGLwWCBIwlYijgoGi_OYTDoGEuX35ASnkFj2n5fpQ-rnRw3bAK_TuRK6r_StSAZexwGdjx5nXIACzb6TF9_4zokMHVp3W9sc2ilhm467iZ2F-rYANXs9BDLCxKWdjF9M964cDyEpFT_9BuoWvWx_96zxpyALhNBmsQ7BkJzUNE");'>
+                            </div>
+                        </div>
+                        <div class="flex w-full flex-col items-stretch justify-center gap-3 p-5">
+                            <div class="flex justify-between items-start">
+                                <p class="text-text-main text-lg font-bold leading-tight">How to use Sepolia Testnet</p>
+                                <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded">3:45</span>
+                            </div>
+                            <p class="text-text-subtle text-sm font-normal leading-normal">
+                                A step-by-step visual guide to configuring your wallet and minting your first K-Pop NFT
+                                ticket seamlessly.
+                            </p>
+                            <button
+                                class="mt-2 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium leading-normal transition-colors gap-2">
+                                <span class="material-symbols-outlined text-lg">play_circle</span>
+                                <span>Watch Tutorial</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                        class="mt-4 p-6 rounded-xl bg-gradient-to-br from-pink-50 to-white border border-pink-100 flex flex-col gap-4 text-center items-center shadow-sm">
+                        <div
+                            class="size-12 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
+                            <span class="material-symbols-outlined text-white text-2xl">chat</span>
+                        </div>
+                        <div>
+                            <p class="text-text-main text-lg font-bold">Still need help?</p>
+                            <p class="text-text-subtle text-sm mt-1">Our support team is available 24/7 to assist with
+                                your wallet setup.</p>
+                        </div>
+                        <a href="mailto:support@kblock.io"
+                            class="flex w-full max-w-[200px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-primary text-white hover:bg-primary/90 transition-colors text-sm font-bold leading-normal shadow-md shadow-primary/20">
+                            Contact Support
+                        </a>
+                        <p class="text-xs text-slate-400">or email support@kblock.io</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/wallet.js"></script>
+</body>
+
+</html>

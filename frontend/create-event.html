@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Create New Event - K-Pop NFT Admin</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Ethers.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+    <!-- Contract Service -->
+    <script src="js/contract-service.js"></script>
+    <!-- Auth Guard -->
+    <script>
+        const ADMIN_ADDRESS = '0x22a43025906Ca17d7e8f5068c187c2c7C5b1e80a'.toLowerCase();
+        (async function () {
+            if (sessionStorage.getItem('adminLoggedIn') !== 'true') {
+                window.location.href = 'admin-login.html';
+            }
+            if (window.ethereum) {
+                const accs = await window.ethereum.request({ method: 'eth_accounts' });
+                if (!accs[0] || accs[0].toLowerCase() !== ADMIN_ADDRESS) {
+                    sessionStorage.removeItem('adminLoggedIn');
+                    window.location.href = 'admin-login.html';
+                }
+            }
+        })();
+
+        function logout() {
+            sessionStorage.removeItem('adminLoggedIn');
+            sessionStorage.removeItem('adminAddress');
+            window.location.href = 'admin-login.html';
+        }
+    </script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4258c",
+                        "background-light": "#f8f5f7",
+                        "background-dark": "#221019",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: "Spline Sans", sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark min-h-screen text-[#181114] dark:text-white transition-colors duration-300">
+    <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+        <div class="layout-container flex h-full grow flex-col">
+            <!-- Top Navigation Bar -->
+            <header
+                class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[#e6dbe0] dark:border-[#3d2431] bg-white dark:bg-[#181114] px-10 py-3 sticky top-0 z-50">
+                <div class="flex items-center gap-8">
+                    <div class="flex items-center gap-3 text-[#181114] dark:text-white">
+                        <div class="size-8 text-primary">
+                            <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_6_330)">
+                                    <path clip-rule="evenodd"
+                                        d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z"
+                                        fill="currentColor" fill-rule="evenodd"></path>
+                                </g>
+                                <defs>
+                                    <clippath id="clip0_6_330">
+                                        <rect fill="white" height="48" width="48"></rect>
+                                    </clippath>
+                                </defs>
+                            </svg>
+                        </div>
+                        <h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">MetaKpop Admin</h2>
+                    </div>
+                    <label class="flex flex-col min-w-40 h-10 max-w-64 hidden md:flex">
+                        <div class="flex w-full flex-1 items-stretch rounded-xl h-full bg-[#f5f0f2] dark:bg-[#2d1a24]">
+                            <div class="text-[#8a6075] flex items-center justify-center pl-4">
+                                <span class="material-symbols-outlined text-xl">search</span>
+                            </div>
+                            <input
+                                class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent focus:ring-0 h-full placeholder:text-[#8a6075] px-4 pl-2 text-sm"
+                                placeholder="Search events..." value="" />
+                        </div>
+                    </label>
+                </div>
+                <div class="flex flex-1 justify-end gap-6 items-center">
+                    <nav class="hidden lg:flex items-center gap-8">
+                        <a class="text-sm font-medium hover:text-primary transition-colors"
+                            href="admin.html">Dashboard</a>
+                        <a class="text-sm font-bold text-primary" href="#">Events</a>
+                        <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Artists</a>
+                        <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Analytics</a>
+                    </nav>
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="flex items-center gap-2 px-3 py-1.5 bg-green-100 dark:bg-green-900/30 rounded-full border border-green-200 dark:border-green-800">
+                            <div class="size-2 rounded-full bg-green-500 animate-pulse"></div>
+                            <span class="text-xs font-bold text-green-700 dark:text-green-400">Sepolia Connected</span>
+                        </div>
+                        <div id="adminStatusBadge"
+                            class="hidden flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-full border border-gray-200">
+                            <div id="adminStatusDot" class="size-2 rounded-full bg-gray-400"></div>
+                            <span id="adminStatusText" class="text-xs font-bold text-gray-600">Checking Access...</span>
+                        </div>
+                        <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border-2 border-primary/20"
+                            data-alt="Admin user profile avatar"
+                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBtMdJ4024z64JAKlnicEo7DZHPp9L7p0wPW7E1gIzBiSqZwMyPsBFiRGoegqE-qxtsZLQbH7yxwwSs0qCWxSRLG7jftUkgIlWGpL_4yNCOnsKYh0ak1W3mvV8udbjfTpvkQGOiqlOHT-A46x7iPeE2l8JNsN-dlemHAaR_3odQrQ3mlw7GCe5KgG92eE_2DzYD7bDcYvWW1exhsh1ebecC5SdpZQWgbzFOEhFP0MQ9Y2GSdQZxfVjG5ROvwK4d3g8rOvBVOyZF2_4");'>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main Content Container -->
+            <main class="flex flex-1 justify-center py-8">
+                <div class="layout-content-container flex flex-col max-w-[1024px] flex-1 px-4">
+                    <!-- Breadcrumbs -->
+                    <div class="flex flex-wrap gap-2 mb-2">
+                        <a class="text-[#8a6075] text-sm font-medium hover:underline" href="#">Events</a>
+                        <span class="text-[#8a6075] text-sm font-medium">/</span>
+                        <span class="text-[#181114] dark:text-white text-sm font-medium">Create New Concert Event</span>
+                    </div>
+                    <!-- Page Heading -->
+                    <div class="flex flex-wrap justify-between gap-3 mb-8">
+                        <div class="flex min-w-72 flex-col gap-1">
+                            <h1
+                                class="text-[#181114] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">
+                                Deploy New Concert</h1>
+                            <p class="text-[#8a6075] text-base font-normal">Configure your event metadata and ticket
+                                tiers for blockchain minting.</p>
+                        </div>
+                    </div>
+                    <!-- Form Section -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Left Column: Primary Details -->
+                        <div class="lg:col-span-2 flex flex-col gap-6">
+                            <!-- General Info Card -->
+                            <section
+                                class="bg-white dark:bg-[#1b0d14] rounded-xl border border-[#e6dbe0] dark:border-[#3d2431] overflow-hidden shadow-sm">
+                                <div
+                                    class="p-6 border-b border-[#e6dbe0] dark:border-[#3d2431] bg-gray-50/50 dark:bg-[#24131b]">
+                                    <h2 class="text-[#181114] dark:text-white text-lg font-bold">General Information
+                                    </h2>
+                                </div>
+                                <div class="p-6 flex flex-col gap-6">
+                                    <!-- Concert Name -->
+                                    <div class="flex flex-col gap-2">
+                                        <label class="text-sm font-semibold text-[#181114] dark:text-white">Concert
+                                            Name</label>
+                                        <input
+                                            class="form-input w-full rounded-lg border-[#e6dbe0] dark:border-[#3d2431] dark:bg-[#2d1a24] focus:border-primary focus:ring-primary h-12"
+                                            placeholder="e.g. BORN PINK World Tour Finale" />
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <!-- Artist Dropdown -->
+                                        <div class="flex flex-col gap-2">
+                                            <label
+                                                class="text-sm font-semibold text-[#181114] dark:text-white">Artist</label>
+                                            <select
+                                                class="form-select w-full rounded-lg border-[#e6dbe0] dark:border-[#3d2431] dark:bg-[#2d1a24] focus:border-primary focus:ring-primary h-12">
+                                                <option>Select Artist</option>
+                                                <option>BLACKPINK</option>
+                                                <option>BABYMONSTER</option>
+                                                <option>NewJeans</option>
+                                                <option>AESPA</option>
+                                                <option>IVE</option>
+                                            </select>
+                                        </div>
+                                        <!-- Venue/City -->
+                                        <div class="flex flex-col gap-2">
+                                            <label class="text-sm font-semibold text-[#181114] dark:text-white">Venue /
+                                                City</label>
+                                            <div class="relative">
+                                                <input
+                                                    class="form-input w-full rounded-lg border-[#e6dbe0] dark:border-[#3d2431] dark:bg-[#2d1a24] focus:border-primary focus:ring-primary h-12 pl-10"
+                                                    placeholder="e.g. Gocheok Sky Dome, Seoul" />
+                                                <span
+                                                    class="material-symbols-outlined absolute left-3 top-3 text-[#8a6075]">location_on</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Dates -->
+                                    <div class="flex flex-col gap-2">
+                                        <label class="text-sm font-semibold text-[#181114] dark:text-white">Tour
+                                            Dates</label>
+                                        <div class="relative">
+                                            <input id="eventDate"
+                                                class="form-input w-full rounded-lg border-[#e6dbe0] dark:border-[#3d2431] dark:bg-[#2d1a24] focus:border-primary focus:ring-primary h-12 pl-10"
+                                                type="date" />
+                                            <span
+                                                class="material-symbols-outlined absolute left-3 top-3 text-[#8a6075]">calendar_today</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <!-- Ticket Tiers Section -->
+                            <section
+                                class="bg-white dark:bg-[#1b0d14] rounded-xl border border-[#e6dbe0] dark:border-[#3d2431] overflow-hidden shadow-sm">
+                                <div
+                                    class="p-6 border-b border-[#e6dbe0] dark:border-[#3d2431] bg-gray-50/50 dark:bg-[#24131b] flex justify-between items-center">
+                                    <h2 class="text-[#181114] dark:text-white text-lg font-bold">Ticket Categories</h2>
+                                    <button
+                                        class="flex items-center gap-1 text-primary font-bold text-sm hover:opacity-80">
+                                        <span class="material-symbols-outlined text-lg">add_circle</span> Add Tier
+                                    </button>
+                                </div>
+                                <div class="p-6 overflow-x-auto">
+                                    <table class="w-full text-left border-collapse">
+                                        <thead>
+                                            <tr
+                                                class="border-b border-[#f5f0f2] dark:border-[#3d2431] text-[#8a6075] text-xs uppercase tracking-wider">
+                                                <th class="py-3 px-2 font-semibold">Tier Name</th>
+                                                <th class="py-3 px-2 font-semibold">Price (ETH)</th>
+                                                <th class="py-3 px-2 font-semibold">Supply</th>
+                                                <th class="py-3 px-2 text-right">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-[#f5f0f2] dark:divide-[#3d2431]">
+                                            <tr>
+                                                <td class="py-4 px-2">
+                                                    <input
+                                                        class="form-input w-full text-sm rounded-lg border-gray-200 dark:border-gray-800 dark:bg-[#2d1a24]"
+                                                        value="VIP Soundcheck" />
+                                                </td>
+                                                <td class="py-4 px-2">
+                                                    <div class="flex items-center gap-2">
+                                                        <input
+                                                            class="form-input w-24 text-sm rounded-lg border-gray-200 dark:border-gray-800 dark:bg-[#2d1a24]"
+                                                            value="0.25" />
+                                                        <span class="text-xs font-bold text-[#8a6075]">ETH</span>
+                                                    </div>
+                                                </td>
+                                                <td class="py-4 px-2">
+                                                    <input
+                                                        class="form-input w-24 text-sm rounded-lg border-gray-200 dark:border-gray-800 dark:bg-[#2d1a24]"
+                                                        value="500" />
+                                                </td>
+                                                <td class="py-4 px-2 text-right">
+                                                    <button class="text-gray-400 hover:text-red-500"><span
+                                                            class="material-symbols-outlined">delete</span></button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="py-4 px-2">
+                                                    <input
+                                                        class="form-input w-full text-sm rounded-lg border-gray-200 dark:border-gray-800 dark:bg-[#2d1a24]"
+                                                        value="General Admission" />
+                                                </td>
+                                                <td class="py-4 px-2">
+                                                    <div class="flex items-center gap-2">
+                                                        <input
+                                                            class="form-input w-24 text-sm rounded-lg border-gray-200 dark:border-gray-800 dark:bg-[#2d1a24]"
+                                                            value="0.08" />
+                                                        <span class="text-xs font-bold text-[#8a6075]">ETH</span>
+                                                    </div>
+                                                </td>
+                                                <td class="py-4 px-2">
+                                                    <input
+                                                        class="form-input w-24 text-sm rounded-lg border-gray-200 dark:border-gray-800 dark:bg-[#2d1a24]"
+                                                        value="5000" />
+                                                </td>
+                                                <td class="py-4 px-2 text-right">
+                                                    <button class="text-gray-400 hover:text-red-500"><span
+                                                            class="material-symbols-outlined">delete</span></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+                        </div>
+                        <!-- Right Column: Media & Actions -->
+                        <div class="lg:col-span-1 flex flex-col gap-6">
+                            <!-- Pinata IPFS CID Input -->
+                            <section
+                                class="bg-white dark:bg-[#1b0d14] rounded-xl border border-[#e6dbe0] dark:border-[#3d2431] overflow-hidden shadow-sm p-6">
+                                <h2
+                                    class="text-[#181114] dark:text-white text-sm font-bold mb-4 uppercase tracking-widest">
+                                    <span class="flex items-center gap-2">
+                                        <svg class="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                                        </svg>
+                                        NFT Image (Pinata IPFS)
+                                    </span>
+                                </h2>
+
+                                <!-- Gateway Selector -->
+                                <div class="flex flex-col gap-2 mb-4">
+                                    <label class="text-xs text-[#8a6075] font-semibold">IPFS Gateway</label>
+                                    <select id="ipfsGateway"
+                                        class="form-select w-full rounded-lg border-[#e6dbe0] dark:border-[#3d2431] dark:bg-[#2d1a24] focus:border-primary focus:ring-primary h-10 text-sm">
+                                        <option value="https://gateway.pinata.cloud/ipfs/">Pinata Gateway (Recommended)
+                                        </option>
+                                        <option value="https://ipfs.io/ipfs/">IPFS.io Gateway</option>
+                                        <option value="https://cloudflare-ipfs.com/ipfs/">Cloudflare Gateway</option>
+                                        <option value="https://dweb.link/ipfs/">Dweb.link Gateway</option>
+                                    </select>
+                                </div>
+
+                                <!-- CID Input -->
+                                <div class="flex flex-col gap-2">
+                                    <label class="text-xs text-[#8a6075] font-semibold">Pinata CID</label>
+                                    <div class="relative">
+                                        <input id="pinataCidInput"
+                                            class="form-input w-full rounded-lg border-[#e6dbe0] dark:border-[#3d2431] dark:bg-[#2d1a24] focus:border-primary focus:ring-primary h-12 pr-24 font-mono text-sm"
+                                            placeholder="QmXoypizjW3WknFiJnKLwHCnL72vedxjQkDDP1mXWo6uco" />
+                                        <button type="button" id="previewBtn"
+                                            class="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary text-xs font-bold rounded-lg transition-colors">
+                                            Preview
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-[#8a6075]">
+                                        Paste the CID from your Pinata upload (starts with Qm... or bafy...)
+                                    </p>
+                                </div>
+
+                                <!-- Hidden field for full URL -->
+                                <input type="hidden" id="eventImageInput" value="" />
+
+                                <!-- Generated URL Display -->
+                                <div id="generatedUrlContainer" class="mt-4 hidden">
+                                    <label class="text-xs text-[#8a6075] font-semibold">Generated URL</label>
+                                    <div
+                                        class="mt-1 p-3 bg-gray-50 dark:bg-[#2d1a24] rounded-lg border border-dashed border-[#e6dbe0] dark:border-[#3d2431]">
+                                        <p id="generatedUrl"
+                                            class="text-xs text-[#181114] dark:text-white font-mono break-all"></p>
+                                    </div>
+                                </div>
+
+                                <!-- Image Preview -->
+                                <div id="imagePreviewContainer" class="mt-4 hidden">
+                                    <label class="text-xs text-[#8a6075] font-semibold mb-2 block">Image Preview</label>
+                                    <div
+                                        class="relative aspect-[4/3] w-full rounded-lg overflow-hidden border border-[#e6dbe0] dark:border-[#3d2431] bg-gray-100 dark:bg-[#2d1a24]">
+                                        <img id="imagePreview" class="w-full h-full object-cover" src=""
+                                            alt="Event Image Preview" />
+                                        <div id="previewLoading"
+                                            class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-black/50 hidden">
+                                            <span
+                                                class="material-symbols-outlined animate-spin text-primary">sync</span>
+                                        </div>
+                                        <div id="previewError"
+                                            class="absolute inset-0 flex flex-col items-center justify-center bg-red-50 dark:bg-red-900/20 hidden">
+                                            <span class="material-symbols-outlined text-red-500 text-3xl">error</span>
+                                            <p class="text-xs text-red-500 mt-2">Failed to load image</p>
+                                        </div>
+                                    </div>
+                                    <p class="mt-2 text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-sm">check_circle</span>
+                                        Recommended ratio: 4:3 (e.g., 1200x900px)
+                                    </p>
+                                </div>
+
+                                <div class="mt-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
+                                    <p class="text-xs text-[#8a6075]">
+                                        <strong class="text-primary">💡 Tip:</strong> Upload your image to
+                                        <a href="https://app.pinata.cloud/" target="_blank"
+                                            class="text-primary hover:underline">Pinata</a>,
+                                        then copy the CID and paste it here.
+                                    </p>
+                                </div>
+                            </section>
+                            <!-- Smart Contract Summary -->
+                            <section
+                                class="bg-primary/5 dark:bg-primary/10 rounded-xl border border-primary/20 p-6 flex flex-col gap-4">
+                                <div class="flex items-center gap-2 text-primary">
+                                    <span class="material-symbols-outlined">account_balance_wallet</span>
+                                    <h3 class="text-sm font-bold uppercase">Deployment Info</h3>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-[#8a6075]">Network:</span>
+                                        <span class="font-bold">Sepolia Testnet</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-[#8a6075]">Standard:</span>
+                                        <span class="font-bold">ERC-721A</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-[#8a6075]">Gas Estimate:</span>
+                                        <span class="font-bold">~0.0042 ETH</span>
+                                    </div>
+                                </div>
+                                <div class="pt-2 border-t border-primary/10">
+                                    <button id="deployBtn"
+                                        class="w-full bg-primary hover:bg-[#d61e7a] text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2">
+                                        <span class="material-symbols-outlined">rocket_launch</span>
+                                        Deploy to Sepolia
+                                    </button>
+                                </div>
+                                <p class="text-[10px] text-center text-[#8a6075]">Clicking deploy will trigger a
+                                    transaction in your connected wallet. Do not refresh until confirmed.</p>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <!-- Sticky Bottom Mobile Action (Hidden on Desktop) -->
+            <div
+                class="fixed bottom-0 left-0 right-0 bg-white dark:bg-[#181114] border-t border-[#e6dbe0] dark:border-[#3d2431] p-4 lg:hidden z-40">
+                <button id="deployBtnMobile"
+                    class="w-full bg-primary text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">rocket_launch</span>
+                    Deploy Collection
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const deployBtn = document.getElementById('deployBtn');
+            const deployBtnMobile = document.getElementById('deployBtnMobile');
+
+            // ========== PINATA CID HANDLER ==========
+            const pinataCidInput = document.getElementById('pinataCidInput');
+            const ipfsGateway = document.getElementById('ipfsGateway');
+            const previewBtn = document.getElementById('previewBtn');
+            const eventImageInput = document.getElementById('eventImageInput');
+            const generatedUrlContainer = document.getElementById('generatedUrlContainer');
+            const generatedUrl = document.getElementById('generatedUrl');
+            const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+            const imagePreview = document.getElementById('imagePreview');
+            const previewLoading = document.getElementById('previewLoading');
+            const previewError = document.getElementById('previewError');
+
+            // Function to generate IPFS URL from CID
+            const generateIpfsUrl = (cid) => {
+                if (!cid || cid.trim() === '') return '';
+                const gateway = ipfsGateway.value;
+                const cleanCid = cid.trim();
+                return gateway + cleanCid;
+            };
+
+            // Function to validate CID format
+            const isValidCid = (cid) => {
+                if (!cid) return false;
+                const cleanCid = cid.trim();
+                // CIDv0 starts with Qm (46 chars), CIDv1 starts with bafy (59 chars)
+                return (cleanCid.startsWith('Qm') && cleanCid.length >= 46) ||
+                    (cleanCid.startsWith('bafy') && cleanCid.length >= 59);
+            };
+
+            // Update URL when CID or gateway changes
+            const updateImageUrl = () => {
+                const cid = pinataCidInput.value.trim();
+                if (cid) {
+                    const url = generateIpfsUrl(cid);
+                    eventImageInput.value = url;
+                    generatedUrl.textContent = url;
+                    generatedUrlContainer.classList.remove('hidden');
+                } else {
+                    eventImageInput.value = '';
+                    generatedUrlContainer.classList.add('hidden');
+                }
+            };
+
+            // Preview image
+            const previewImage = () => {
+                const cid = pinataCidInput.value.trim();
+
+                if (!cid) {
+                    alert('❌ Please enter a Pinata CID first!');
+                    return;
+                }
+
+                if (!isValidCid(cid)) {
+                    alert('⚠️ Invalid CID format!\n\nCID should start with "Qm" (CIDv0) or "bafy" (CIDv1).');
+                    return;
+                }
+
+                const url = generateIpfsUrl(cid);
+
+                // Show loading
+                imagePreviewContainer.classList.remove('hidden');
+                previewLoading.classList.remove('hidden');
+                previewError.classList.add('hidden');
+                imagePreview.classList.add('opacity-50');
+
+                // Create new image to test loading
+                const testImg = new Image();
+                testImg.onload = () => {
+                    imagePreview.src = url;
+                    imagePreview.classList.remove('opacity-50');
+                    previewLoading.classList.add('hidden');
+                    previewError.classList.add('hidden');
+                    eventImageInput.value = url;
+                    updateImageUrl();
+                };
+                testImg.onerror = () => {
+                    previewLoading.classList.add('hidden');
+                    previewError.classList.remove('hidden');
+                    imagePreview.classList.add('opacity-50');
+                };
+                testImg.src = url;
+            };
+
+            // Event Listeners for Pinata
+            if (pinataCidInput) {
+                pinataCidInput.addEventListener('input', updateImageUrl);
+            }
+            if (ipfsGateway) {
+                ipfsGateway.addEventListener('change', () => {
+                    updateImageUrl();
+                    // If preview was shown, update it too
+                    if (!imagePreviewContainer.classList.contains('hidden')) {
+                        previewImage();
+                    }
+                });
+            }
+            if (previewBtn) {
+                previewBtn.addEventListener('click', previewImage);
+            }
+
+            // Also preview on Enter key
+            if (pinataCidInput) {
+                pinataCidInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        previewImage();
+                    }
+                });
+            }
+
+            // ========== END PINATA CID HANDLER ==========
+
+            // Admin Status UI
+            const checkAdminStatus = async () => {
+                const badge = document.getElementById('adminStatusBadge');
+                const dot = document.getElementById('adminStatusDot');
+                const text = document.getElementById('adminStatusText');
+
+                if (badge) badge.classList.remove('hidden');
+
+                try {
+                    // Ensure connected
+                    if (!window.ContractService.contract) {
+                        const success = await window.ContractService.init();
+                        if (!success) {
+                            if (text) text.innerText = "Wallet Not Connected";
+                            return;
+                        }
+                    }
+
+                    const contract = window.ContractService.contract;
+                    // Use readOnlyContract for owner() call (uses Alchemy RPC directly)
+                    const readOnlyContract = window.ContractService.readOnlyContract;
+                    console.log("Contract Address:", window.ContractService.contractAddress);
+                    console.log("Using readOnlyContract for owner() call");
+
+                    const signer = await window.ContractService.provider.getSigner();
+                    const signerAddress = await signer.getAddress();
+                    console.log("Calling owner() via Alchemy RPC...");
+                    const ownerAddress = await readOnlyContract.owner();
+
+                    console.log("Connected:", signerAddress);
+                    console.log("Contract Owner:", ownerAddress);
+
+                    const isAdmin = signerAddress.toLowerCase() === ownerAddress.toLowerCase();
+
+                    if (isAdmin) {
+                        // Is Admin
+                        badge.className = "flex items-center gap-2 px-3 py-1.5 bg-purple-100 rounded-full border border-purple-200";
+                        dot.className = "size-2 rounded-full bg-purple-600 animate-pulse";
+                        text.className = "text-xs font-bold text-purple-700";
+                        text.innerText = "Admin Verified";
+
+                        if (deployBtn) {
+                            deployBtn.disabled = false;
+                            deployBtn.title = "Deploy new event to blockchain";
+                        }
+                        if (deployBtnMobile) deployBtnMobile.disabled = false;
+                    } else {
+                        // Not Admin
+                        badge.className = "flex items-center gap-2 px-3 py-1.5 bg-red-100 rounded-full border border-red-200";
+                        dot.className = "size-2 rounded-full bg-red-500";
+                        text.className = "text-xs font-bold text-red-700";
+                        text.innerText = "Access Denied (Not Owner)";
+
+                        if (deployBtn) {
+                            deployBtn.disabled = true;
+                            deployBtn.innerText = "Admin Access Required";
+                            deployBtn.className = "w-full rounded-xl bg-gray-300 text-gray-500 font-bold h-12 cursor-not-allowed flex items-center justify-center gap-2";
+                            deployBtn.title = "Only the contract owner can create events";
+                        }
+                        if (deployBtnMobile) {
+                            deployBtnMobile.disabled = true;
+                            deployBtnMobile.innerText = "Admin Only";
+                            deployBtnMobile.className = "w-full bg-gray-300 text-gray-500 font-bold py-3 rounded-lg flex items-center justify-center gap-2 cursor-not-allowed";
+                        }
+                    }
+                } catch (err) {
+                    console.error("Admin Check Error:", err);
+
+                    // Show specific error message
+                    let errorMsg = "Check Failed";
+                    if (err.message?.includes("network")) {
+                        errorMsg = "Wrong Network";
+                    } else if (err.message?.includes("user rejected") || err.code === 4001) {
+                        errorMsg = "Connection Rejected";
+                    } else if (err.message?.includes("call revert")) {
+                        errorMsg = "Contract Error";
+                    } else if (!window.ethereum) {
+                        errorMsg = "No MetaMask";
+                    }
+
+                    if (badge) {
+                        badge.className = "flex items-center gap-2 px-3 py-1.5 bg-yellow-100 rounded-full border border-yellow-200";
+                        dot.className = "size-2 rounded-full bg-yellow-500";
+                        text.className = "text-xs font-bold text-yellow-700";
+                    }
+                    if (text) text.innerText = errorMsg;
+                    text.title = err.message || "Unknown error";
+                }
+            };
+
+            const handleDeploy = async (e) => {
+                e.preventDefault();
+                const btn = e.target.closest('button'); // Ensure we target the button if icon clicked
+
+                // Get Values
+                const nameInput = document.querySelector('input[placeholder*="BORN PINK"]');
+                const name = nameInput ? nameInput.value : '';
+                const artist = document.querySelector('select').value;
+                const venueInput = document.querySelector('input[placeholder*="Gocheok"]');
+                const venue = venueInput ? venueInput.value : '';
+                const date = document.getElementById('eventDate').value;
+
+                // Ticket Tier 1 Logic
+                const tierRows = document.querySelectorAll('tbody tr');
+                const priceInput = tierRows[0]?.querySelector('td:nth-child(2) input');
+                const supplyInput = tierRows[0]?.querySelector('td:nth-child(3) input');
+
+                const price = priceInput ? priceInput.value : "0.1";
+                const supply = supplyInput ? supplyInput.value : "1000";
+
+                const imageUrlInput = document.getElementById('eventImageInput');
+                const imageUrl = imageUrlInput ? imageUrlInput.value : "https://via.placeholder.com/400";
+
+                // Validation
+                if (!name || name === '') {
+                    alert("❌ Please enter a Concert Name!");
+                    return;
+                }
+                if (!artist || artist === 'Select Artist') {
+                    alert("❌ Please select an Artist!");
+                    return;
+                }
+                if (!venue || venue === '') {
+                    alert("❌ Please enter a Venue!");
+                    return;
+                }
+                if (!date) {
+                    alert("❌ Please select a Date!");
+                    return;
+                }
+                if (!price || parseFloat(price) <= 0) {
+                    alert("❌ Please enter a valid ticket price!");
+                    return;
+                }
+
+                // Validate Pinata CID
+                const cidInput = document.getElementById('pinataCidInput');
+                const cid = cidInput ? cidInput.value.trim() : '';
+                if (!imageUrl || imageUrl === '') {
+                    alert("❌ Please enter a Pinata CID for the event image!\n\nUpload your image to Pinata and paste the CID.");
+                    return;
+                }
+                if (!cid.startsWith('Qm') && !cid.startsWith('bafy')) {
+                    alert("⚠️ Invalid CID format!\n\nCID should start with 'Qm' (CIDv0) or 'bafy' (CIDv1).\n\nPlease check your Pinata CID.");
+                    return;
+                }
+
+                // Confirmation Dialog
+                const confirmMsg = `🎤 Deploy New Event?\n\n` +
+                    `📌 Name: ${name}\n` +
+                    `🎵 Artist: ${artist}\n` +
+                    `📍 Venue: ${venue}\n` +
+                    `📅 Date: ${date}\n` +
+                    `💰 Price: ${price} ETH\n` +
+                    `🎟️ Supply: ${supply} tickets\n\n` +
+                    `This will trigger a MetaMask transaction.\nProceed?`;
+
+                if (!confirm(confirmMsg)) {
+                    return; // User cancelled
+                }
+
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Connecting MetaMask...';
+                btn.disabled = true;
+
+                try {
+                    // Step 1: Explicitly request MetaMask connection
+                    if (!window.ethereum) {
+                        throw new Error("MetaMask tidak terdeteksi! Silakan install MetaMask terlebih dahulu.");
+                    }
+
+                    // Request account access - This triggers MetaMask popup
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+                    // Step 1.5: CHECK AND SWITCH TO SEPOLIA NETWORK
+                    const SEPOLIA_CHAIN_ID = '0xaa36a7'; // 11155111 in hex
+                    const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+
+                    if (currentChainId !== SEPOLIA_CHAIN_ID) {
+                        btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Switching to Sepolia...';
+
+                        try {
+                            // Try to switch to Sepolia
+                            await window.ethereum.request({
+                                method: 'wallet_switchEthereumChain',
+                                params: [{ chainId: SEPOLIA_CHAIN_ID }],
+                            });
+                        } catch (switchError) {
+                            // If Sepolia is not added to MetaMask, add it
+                            if (switchError.code === 4902) {
+                                await window.ethereum.request({
+                                    method: 'wallet_addEthereumChain',
+                                    params: [{
+                                        chainId: SEPOLIA_CHAIN_ID,
+                                        chainName: 'Sepolia Testnet',
+                                        nativeCurrency: {
+                                            name: 'Sepolia ETH',
+                                            symbol: 'ETH',
+                                            decimals: 18
+                                        },
+                                        rpcUrls: ['https://eth-sepolia.g.alchemy.com/v2/demo'],
+                                        blockExplorerUrls: ['https://sepolia.etherscan.io']
+                                    }],
+                                });
+                            } else {
+                                throw new Error("Gagal switch ke Sepolia network. Silakan switch manual di MetaMask.");
+                            }
+                        }
+
+                        // Re-check after switch
+                        const newChainId = await window.ethereum.request({ method: 'eth_chainId' });
+                        if (newChainId !== SEPOLIA_CHAIN_ID) {
+                            throw new Error("Anda harus berada di Sepolia Testnet untuk deploy event!");
+                        }
+                    }
+
+                    if (!accounts || accounts.length === 0) {
+                        throw new Error("Tidak ada akun yang terhubung. Silakan hubungkan wallet Anda.");
+                    }
+
+                    console.log("✅ Wallet Connected:", accounts[0]);
+                    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Preparing Transaction...';
+
+                    // Step 2: Verify Admin Status Again
+                    if (!window.ContractService.contract) {
+                        await window.ContractService.init();
+                    }
+
+                    const contract = window.ContractService.contract;
+                    // Use readOnlyContract for owner() to avoid BAD_DATA error
+                    const readOnlyContract = window.ContractService.readOnlyContract;
+                    const ownerAddress = await readOnlyContract.owner();
+
+                    if (accounts[0].toLowerCase() !== ownerAddress.toLowerCase()) {
+                        throw new Error("Access Denied! Wallet Anda bukan owner kontrak.");
+                    }
+
+                    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Deploying to Blockchain...';
+
+                    // Step 3: Create Concert (This triggers MetaMask transaction popup)
+                    await window.ContractService.createConcert(name, artist, venue, date, imageUrl, price, supply);
+
+                    alert("✅ Event berhasil di-deploy ke Blockchain!\n\nEvent akan muncul di halaman utama.");
+                    window.location.href = "admin.html";
+
+                } catch (err) {
+                    console.error("Deploy Error:", err);
+
+                    // Handle specific error types
+                    let errorMessage = "Transaction failed";
+
+                    if (err.code === 4001) {
+                        errorMessage = "❌ Transaksi dibatalkan oleh pengguna.";
+                    } else if (err.code === -32002) {
+                        errorMessage = "⏳ MetaMask sedang memproses permintaan sebelumnya. Silakan buka MetaMask dan selesaikan.";
+                    } else if (err.message) {
+                        errorMessage = err.message;
+                    } else if (err.reason) {
+                        errorMessage = err.reason;
+                    }
+
+                    alert("Error: " + errorMessage);
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }
+            };
+
+            if (deployBtn) deployBtn.addEventListener('click', handleDeploy);
+            if (deployBtnMobile) deployBtnMobile.addEventListener('click', handleDeploy);
+
+            // Run Check
+            checkAdminStatus();
+        });
+    </script>
+</body>
+
+</html>

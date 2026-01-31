@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Admin Login - K-Pop NFT</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4258c",
+                        "primary-hover": "#d61e7a",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Spline Sans', sans-serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #f4258c 50%, #764ba2 100%);
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(244, 37, 140, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(244, 37, 140, 0.6);
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen gradient-bg flex items-center justify-center p-4">
+    <!-- Background Pattern -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+        <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- Login Card -->
+    <div class="relative z-10 w-full max-w-md">
+        <div class="glass-card rounded-3xl shadow-2xl overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-primary to-purple-600 p-8 text-center">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-white/20 rounded-full mb-4 pulse-glow">
+                    <span class="material-symbols-outlined text-white text-4xl">admin_panel_settings</span>
+                </div>
+                <h1 class="text-2xl font-bold text-white mb-2">Admin Portal</h1>
+                <p class="text-white/80 text-sm">K-Pop NFT Ticketing System</p>
+            </div>
+
+            <!-- Login Form -->
+            <div class="p-8">
+                <div id="loginSection" class="flex flex-col gap-6">
+                    <div class="text-center">
+                        <h2 class="text-xl font-bold text-slate-800 mb-2">Connect Your Wallet</h2>
+                        <p class="text-slate-500 text-sm">Only authorized admin wallets can access the dashboard</p>
+                    </div>
+
+                    <!-- Status Display -->
+                    <div id="statusBox" class="hidden p-4 rounded-xl border text-center">
+                        <div id="statusIcon" class="mb-2"></div>
+                        <p id="statusText" class="text-sm font-medium"></p>
+                        <p id="statusAddress" class="text-xs text-slate-400 font-mono mt-1"></p>
+                    </div>
+
+                    <!-- Connect Button -->
+                    <button id="connectBtn"
+                        class="w-full bg-primary hover:bg-primary-hover text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5">
+                        <span class="material-symbols-outlined">account_balance_wallet</span>
+                        <span>Connect MetaMask</span>
+                    </button>
+
+                    <!-- Info Box -->
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                        <div class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-blue-500 text-xl mt-0.5">info</span>
+                            <div>
+                                <p class="text-slate-700 text-sm font-medium mb-1">Authorized Admin Only</p>
+                                <p class="text-slate-500 text-xs">This portal is restricted to the contract owner.
+                                    Unauthorized access attempts will be denied.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success Section (Hidden by default) -->
+                <div id="successSection" class="hidden flex flex-col gap-6">
+                    <div class="text-center">
+                        <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                            <span class="material-symbols-outlined text-green-600 text-3xl">verified</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-slate-800 mb-2">Access Granted!</h2>
+                        <p class="text-slate-500 text-sm">Welcome back, Admin</p>
+                    </div>
+
+                    <div class="bg-green-50 rounded-xl p-4 border border-green-100">
+                        <p class="text-green-700 text-sm font-medium text-center">Redirecting to Dashboard...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="px-8 pb-6">
+                <div class="border-t border-slate-100 pt-4">
+                    <a href="home.html"
+                        class="flex items-center justify-center gap-2 text-slate-400 hover:text-primary text-sm transition-colors">
+                        <span class="material-symbols-outlined text-lg">arrow_back</span>
+                        <span>Back to Main Site</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Network Badge -->
+        <div class="flex justify-center mt-4">
+            <div class="flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-md rounded-full">
+                <span class="h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
+                <span class="text-white/90 text-xs font-medium">Sepolia Testnet</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin Configuration
+        const ADMIN_ADDRESS = '0x22a43025906Ca17d7e8f5068c187c2c7C5b1e80a'.toLowerCase();
+
+        const connectBtn = document.getElementById('connectBtn');
+        const statusBox = document.getElementById('statusBox');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusText = document.getElementById('statusText');
+        const statusAddress = document.getElementById('statusAddress');
+        const loginSection = document.getElementById('loginSection');
+        const successSection = document.getElementById('successSection');
+
+        const showStatus = (type, message, address = '') => {
+            statusBox.classList.remove('hidden', 'bg-green-50', 'border-green-200', 'bg-red-50', 'border-red-200', 'bg-yellow-50', 'border-yellow-200');
+
+            if (type === 'success') {
+                statusBox.classList.add('bg-green-50', 'border-green-200');
+                statusIcon.innerHTML = '<span class="material-symbols-outlined text-green-600 text-2xl">check_circle</span>';
+                statusText.className = 'text-sm font-medium text-green-700';
+            } else if (type === 'error') {
+                statusBox.classList.add('bg-red-50', 'border-red-200');
+                statusIcon.innerHTML = '<span class="material-symbols-outlined text-red-600 text-2xl">cancel</span>';
+                statusText.className = 'text-sm font-medium text-red-700';
+            } else if (type === 'loading') {
+                statusBox.classList.add('bg-yellow-50', 'border-yellow-200');
+                statusIcon.innerHTML = '<span class="material-symbols-outlined text-yellow-600 text-2xl animate-spin">sync</span>';
+                statusText.className = 'text-sm font-medium text-yellow-700';
+            }
+
+            statusText.innerText = message;
+            statusAddress.innerText = address;
+        };
+
+        connectBtn.addEventListener('click', async () => {
+            // Check MetaMask
+            if (!window.ethereum) {
+                showStatus('error', 'MetaMask tidak terdeteksi! Silakan install MetaMask.');
+                return;
+            }
+
+            const originalText = connectBtn.innerHTML;
+            connectBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Connecting...';
+            connectBtn.disabled = true;
+
+            try {
+                showStatus('loading', 'Menghubungkan ke MetaMask...');
+
+                // Request account access
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+                if (!accounts || accounts.length === 0) {
+                    throw new Error('Tidak ada akun yang terhubung');
+                }
+
+                const connectedAddress = accounts[0].toLowerCase();
+
+                showStatus('loading', 'Memverifikasi akses admin...', accounts[0]);
+
+                // Simulate verification delay for UX
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Check if connected wallet is admin
+                if (connectedAddress === ADMIN_ADDRESS) {
+                    showStatus('success', 'Akses Admin Terverifikasi!', accounts[0]);
+
+                    // Store login state
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    sessionStorage.setItem('adminAddress', accounts[0]);
+
+                    // Show success section
+                    setTimeout(() => {
+                        loginSection.classList.add('hidden');
+                        successSection.classList.remove('hidden');
+
+                        // Redirect after showing success
+                        setTimeout(() => {
+                            window.location.href = 'admin.html';
+                        }, 1500);
+                    }, 500);
+
+                } else {
+                    showStatus('error', 'Akses Ditolak! Wallet Anda bukan admin.', accounts[0]);
+                    connectBtn.innerHTML = originalText;
+                    connectBtn.disabled = false;
+                }
+
+            } catch (err) {
+                console.error('Login Error:', err);
+
+                let errorMessage = 'Terjadi kesalahan';
+                if (err.code === 4001) {
+                    errorMessage = 'Koneksi dibatalkan oleh pengguna';
+                } else if (err.message) {
+                    errorMessage = err.message;
+                }
+
+                showStatus('error', errorMessage);
+                connectBtn.innerHTML = originalText;
+                connectBtn.disabled = false;
+            }
+        });
+
+        // Check if already logged in
+        window.addEventListener('DOMContentLoaded', async () => {
+            if (sessionStorage.getItem('adminLoggedIn') === 'true' && window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                    if (accounts[0]?.toLowerCase() === ADMIN_ADDRESS) {
+                        window.location.href = 'admin.html';
+                    }
+                } catch (e) {
+                    console.log('Auto-login check failed');
+                }
+            }
+        });
+
+        // Listen for account changes
+        if (window.ethereum) {
+            window.ethereum.on('accountsChanged', (accounts) => {
+                if (accounts.length === 0 || accounts[0].toLowerCase() !== ADMIN_ADDRESS) {
+                    sessionStorage.removeItem('adminLoggedIn');
+                    sessionStorage.removeItem('adminAddress');
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>BABYMONSTER Tour Schedule</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f4258c",
+                        "background-light": "#f8f5f7",
+                        "background-dark": "#221019",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Custom scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-[#181114] font-display selection:bg-primary/30">
+    <div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+        <!-- Navigation -->
+        <header class="sticky top-0 z-50 w-full glass-panel bg-white/90 backdrop-blur-md border-b border-gray-100">
+            <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex h-20 items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                            <span class="material-symbols-outlined" style="font-size: 24px;">confirmation_number</span>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight text-slate-900">K-Block<span
+                                class="text-primary">.</span></span>
+                    </div>
+                    <nav class="hidden md:flex items-center gap-8">
+                        <a class="text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                            href="home.html">Home</a>
+                        <a class="text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                            href="marketplace.html">Marketplace</a>
+                        <a class="text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                            href="my-tickets.html">My Tickets</a>
+                        <a class="text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                            href="help.html">Help</a>
+                    </nav>
+                    <div class="flex items-center gap-4">
+                        <button
+                            class="flex items-center gap-2 rounded-full bg-gray-100 border border-gray-200 px-4 py-2 text-sm font-medium text-slate-900 hover:bg-gray-200 transition-colors">
+                            <span
+                                class="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(74,222,128,0.6)]"></span>
+                            Sepolia
+                        </button>
+                        <button id="connectWalletBtn"
+                            class="hidden sm:flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-white transition-all hover:bg-primary-hover hover:scale-105 active:scale-95 shadow-lg shadow-primary/25">
+                            <span class="material-symbols-outlined"
+                                style="font-size: 20px;">account_balance_wallet</span>
+                            <span>Connect Wallet</span>
+                        </button>
+                        <button class="md:hidden p-2 text-slate-500 hover:text-primary">
+                            <span class="material-symbols-outlined">menu</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="layout-container flex h-full grow flex-col items-center">
+            <!-- Hero Section -->
+            <div class="w-full max-w-[1200px] px-4 py-6 md:px-10 md:py-10">
+                <div class="relative flex min-h-[500px] w-full flex-col items-center justify-end overflow-hidden rounded-xl bg-cover bg-center p-8 text-center md:items-start md:text-left shadow-2xl"
+                    data-alt="Exciting K-pop concert stage with bright purple and pink lights and silhouettes of group members"
+                    style="background-image: linear-gradient(180deg, rgba(24, 17, 20, 0) 0%, rgba(24, 17, 20, 0.4) 40%, rgba(24, 17, 20, 0.8) 100%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuAawu7gbc4BNyWSBzh8UduhniI8WqpBQof2zXnVxBZ03BjcLw5HaxMQnei8kq8wfXPtQDwYyQxX3W560ZK-YbHXXU4iR4XYoDi03HVK45uOrOx_3fMnsFv9SeBOiZyhgWBQZ830bGNo1d3WoR8kGzqZJNXAItcWUe4xzaXO4AH3_qYOVkJrEe72VuwGQzvR1e_C_vOkz78CiY1hsJ5HbtYetALH_dip8vo5LzrJy4MfuqZUfse4pPgYFPS3FmhZgAnNRY_U-Sc4W-o');">
+                    <div class="relative z-10 flex max-w-[600px] flex-col gap-4">
+                        <div
+                            class="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-md">
+                            <span class="material-symbols-outlined text-sm">public</span>
+                            1st World Tour 2024
+                        </div>
+                        <h1
+                            class="text-5xl font-black leading-none tracking-tighter text-white md:text-7xl lg:text-8xl drop-shadow-lg">
+                            BABY<br /><span class="text-primary">MONSTER</span>
+                        </h1>
+                        <p class="text-lg font-medium text-white/90 md:text-xl">
+                            The rookie monsters of YG Entertainment are hitting the global stage. Secure your NFT ticket
+                            on the Sepolia network now.
+                        </p>
+                        <div class="mt-4 flex flex-wrap gap-3">
+                            <a class="flex h-12 min-w-[140px] cursor-pointer items-center justify-center rounded-full bg-primary px-6 text-base font-bold text-white shadow-lg shadow-primary/30 transition-all hover:bg-primary/90 hover:scale-105"
+                                href="#schedule">
+                                Select Date
+                            </a>
+                            <button
+                                class="flex h-12 min-w-[140px] cursor-pointer items-center justify-center rounded-full bg-white/10 px-6 text-base font-bold text-white backdrop-blur-sm transition-all hover:bg-white/20">
+                                Watch Trailer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layout-content-container flex w-full max-w-[960px] flex-col px-4 md:px-0">
+                <!-- Floating Stats & Socials Bar -->
+                <div class="-mt-8 mb-10 transform md:-mt-12">
+                    <div
+                        class="mx-auto flex w-full max-w-[880px] flex-col gap-4 overflow-hidden rounded-xl bg-white p-2 shadow-xl md:flex-row md:items-center border border-gray-100">
+                        <!-- Stats Group -->
+                        <div
+                            class="flex flex-1 items-center justify-around gap-4 px-4 py-2 md:justify-start md:gap-12 md:px-8">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-medium text-gray-500">Floor Price</span>
+                                <span class="text-xl font-bold text-[#181114]">0.05 ETH</span>
+                            </div>
+                            <div class="h-8 w-px bg-gray-100"></div>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-medium text-gray-500">Tickets</span>
+                                <span class="text-xl font-bold text-[#181114]">12.5K</span>
+                            </div>
+                            <div class="h-8 w-px bg-gray-100"></div>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-medium text-gray-500">Owners</span>
+                                <span class="text-xl font-bold text-[#181114]">8.2K</span>
+                            </div>
+                        </div>
+                        <!-- Socials Group -->
+                        <div
+                            class="flex items-center justify-center gap-2 rounded-lg bg-background-light p-2 md:ml-auto">
+                            <button
+                                class="group flex size-10 items-center justify-center rounded-full bg-white text-[#181114] shadow-sm transition-colors hover:bg-primary hover:text-white">
+                                <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+                            </button>
+                            <button
+                                class="group flex size-10 items-center justify-center rounded-full bg-white text-[#181114] shadow-sm transition-colors hover:bg-primary hover:text-white">
+                                <span class="material-symbols-outlined text-[20px]">photo_camera</span>
+                            </button>
+                            <button
+                                class="group flex size-10 items-center justify-center rounded-full bg-white text-[#181114] shadow-sm transition-colors hover:bg-primary hover:text-white">
+                                <span class="material-symbols-outlined text-[20px]">group</span>
+                            </button>
+                            <button
+                                class="group flex size-10 items-center justify-center rounded-full bg-white text-[#181114] shadow-sm transition-colors hover:bg-primary hover:text-white">
+                                <span class="material-symbols-outlined text-[20px]">smart_display</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Warning Banner -->
+                <div
+                    class="mb-8 flex items-center gap-3 rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-3 text-yellow-800">
+                    <span class="material-symbols-outlined">warning</span>
+                    <p class="text-sm font-medium">This is a testnet application on Sepolia. Do not use real ETH.</p>
+                </div>
+                <!-- Schedule Section -->
+                <div class="scroll-mt-24 pb-20" id="schedule">
+                    <div class="mb-6 flex items-center justify-between px-2">
+                        <h3 class="text-2xl font-bold tracking-tight text-[#181114]">Tour Schedule</h3>
+                        <span class="text-sm font-medium text-gray-500">4 Events Found</span>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <!-- Event 1 -->
+                        <div
+                            class="group relative flex flex-col items-center gap-6 overflow-hidden rounded-xl bg-white p-5 shadow-sm transition-all hover:border-primary/50 hover:shadow-md md:flex-row md:justify-between border border-transparent">
+                            <div class="absolute inset-0 bg-primary/0 transition-colors group-hover:bg-primary/[0.02]">
+                            </div>
+                            <div class="flex w-full flex-1 gap-6 md:w-auto">
+                                <!-- Date Badge -->
+                                <div
+                                    class="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-2xl bg-background-light text-center border border-gray-100 group-hover:border-primary/20 group-hover:bg-white">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-primary">NOV</span>
+                                    <span class="text-2xl font-black leading-none text-[#181114]">17</span>
+                                </div>
+                                <!-- Info -->
+                                <div class="flex flex-col justify-center">
+                                    <h4 class="text-lg font-bold text-[#181114] group-hover:text-primary">Seoul, South
+                                        Korea</h4>
+                                    <div class="flex items-center gap-2 text-sm text-gray-500">
+                                        <span class="material-symbols-outlined text-[18px]">stadium</span>
+                                        KSPO Dome
+                                    </div>
+                                    <div
+                                        class="mt-1 inline-flex items-center gap-1 rounded-sm bg-red-100 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-red-600 w-fit">
+                                        <span class="material-symbols-outlined text-[10px]">local_fire_department</span>
+                                        Selling Fast
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="z-10 w-full md:w-auto">
+                                <button
+                                    class="flex h-12 w-full cursor-pointer items-center justify-center rounded-full bg-primary px-8 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-transform active:scale-95 md:w-auto">
+                                    Buy Ticket
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Event 2 -->
+                        <div
+                            class="group relative flex flex-col items-center gap-6 overflow-hidden rounded-xl bg-white p-5 shadow-sm transition-all hover:border-primary/50 hover:shadow-md md:flex-row md:justify-between border border-transparent">
+                            <div class="absolute inset-0 bg-primary/0 transition-colors group-hover:bg-primary/[0.02]">
+                            </div>
+                            <div class="flex w-full flex-1 gap-6 md:w-auto">
+                                <div
+                                    class="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-2xl bg-background-light text-center border border-gray-100 group-hover:border-primary/20 group-hover:bg-white">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-primary">NOV</span>
+                                    <span class="text-2xl font-black leading-none text-[#181114]">24</span>
+                                </div>
+                                <div class="flex flex-col justify-center">
+                                    <h4 class="text-lg font-bold text-[#181114] group-hover:text-primary">Tokyo, Japan
+                                    </h4>
+                                    <div class="flex items-center gap-2 text-sm text-gray-500">
+                                        <span class="material-symbols-outlined text-[18px]">stadium</span>
+                                        Ariake Arena
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="z-10 w-full md:w-auto">
+                                <button
+                                    class="flex h-12 w-full cursor-pointer items-center justify-center rounded-full bg-white border-2 border-primary px-8 text-sm font-bold text-primary transition-all hover:bg-primary hover:text-white active:scale-95 md:w-auto">
+                                    Select Date
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Event 3 -->
+                        <div
+                            class="group relative flex flex-col items-center gap-6 overflow-hidden rounded-xl bg-white p-5 shadow-sm transition-all hover:border-primary/50 hover:shadow-md md:flex-row md:justify-between border border-transparent">
+                            <div class="absolute inset-0 bg-primary/0 transition-colors group-hover:bg-primary/[0.02]">
+                            </div>
+                            <div class="flex w-full flex-1 gap-6 md:w-auto">
+                                <div
+                                    class="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-2xl bg-background-light text-center border border-gray-100 group-hover:border-primary/20 group-hover:bg-white">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-primary">DEC</span>
+                                    <span class="text-2xl font-black leading-none text-[#181114]">01</span>
+                                </div>
+                                <div class="flex flex-col justify-center">
+                                    <h4 class="text-lg font-bold text-[#181114] group-hover:text-primary">Jakarta,
+                                        Indonesia</h4>
+                                    <div class="flex items-center gap-2 text-sm text-gray-500">
+                                        <span class="material-symbols-outlined text-[18px]">stadium</span>
+                                        Beach City Stadium
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="z-10 w-full md:w-auto">
+                                <button
+                                    class="flex h-12 w-full cursor-pointer items-center justify-center rounded-full bg-white border-2 border-primary px-8 text-sm font-bold text-primary transition-all hover:bg-primary hover:text-white active:scale-95 md:w-auto">
+                                    Select Date
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Event 4 -->
+                        <div
+                            class="group relative flex flex-col items-center gap-6 overflow-hidden rounded-xl bg-white p-5 shadow-sm transition-all hover:border-primary/50 hover:shadow-md md:flex-row md:justify-between border border-transparent">
+                            <div class="absolute inset-0 bg-primary/0 transition-colors group-hover:bg-primary/[0.02]">
+                            </div>
+                            <div class="flex w-full flex-1 gap-6 md:w-auto">
+                                <div
+                                    class="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-2xl bg-background-light text-center border border-gray-100 group-hover:border-primary/20 group-hover:bg-white">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-primary">DEC</span>
+                                    <span class="text-2xl font-black leading-none text-[#181114]">08</span>
+                                </div>
+                                <div class="flex flex-col justify-center">
+                                    <h4 class="text-lg font-bold text-[#181114] group-hover:text-primary">Singapore, SG
+                                    </h4>
+                                    <div class="flex items-center gap-2 text-sm text-gray-500">
+                                        <span class="material-symbols-outlined text-[18px]">stadium</span>
+                                        The Star Theatre
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="z-10 w-full md:w-auto">
+                                <button
+                                    class="flex h-12 w-full cursor-pointer items-center justify-center rounded-full bg-white border-2 border-primary px-8 text-sm font-bold text-primary transition-all hover:bg-primary hover:text-white active:scale-95 md:w-auto">
+                                    Select Date
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="border-t border-gray-200 bg-white py-8">
+            <div class="flex flex-col items-center justify-center gap-4 text-center">
+                <p class="text-sm font-medium text-gray-500">Powered by Sepolia Testnet</p>
+                <div class="flex gap-4">
+                    <a class="text-sm font-bold text-[#181114] hover:text-primary" href="#">Terms</a>
+                    <a class="text-sm font-bold text-[#181114] hover:text-primary" href="#">Privacy</a>
+                    <a class="text-sm font-bold text-[#181114] hover:text-primary" href="#">Support</a>
+                </div>
+                <p class="text-xs text-gray-400">© 2024 BABYTIX. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+    <script src="js/wallet.js"></script>
+</body>
+
+</html>

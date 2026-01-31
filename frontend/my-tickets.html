@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>My NFT Tickets Collection</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Material Symbols -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Ethers & Contract -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+    <script src="js/contract-service.js"></script>
+    <!-- Theme Configuration -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1f44f9",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#0f1323",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-white text-slate-900 font-display min-h-screen flex flex-col antialiased selection:bg-primary/20 selection:text-primary">
+    <!-- Top Navigation -->
+    <header class="sticky top-0 z-50 w-full glass-panel bg-white/90 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex h-20 items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <span class="material-symbols-outlined" style="font-size: 24px;">confirmation_number</span>
+                    </div>
+                    <span class="text-xl font-bold tracking-tight text-slate-900">K-Block<span
+                            class="text-primary">.</span></span>
+                </div>
+                <nav class="hidden md:flex items-center gap-8">
+                    <a class="text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                        href="home.html">Home</a>
+                    <a class="text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                        href="marketplace.html">Marketplace</a>
+                    <a class="text-sm font-medium text-slate-900 hover:text-primary transition-colors"
+                        href="my-tickets.html">My Tickets</a>
+                    <a class="text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+                        href="help.html">Help</a>
+                </nav>
+                <div class="flex items-center gap-4">
+                    <button
+                        class="flex items-center gap-2 rounded-full bg-gray-100 border border-gray-200 px-4 py-2 text-sm font-medium text-slate-900 hover:bg-gray-200 transition-colors">
+                        <span class="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(74,222,128,0.6)]"></span>
+                        Sepolia
+                    </button>
+                    <button id="connectWalletBtn"
+                        class="hidden sm:flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-white transition-all hover:bg-primary-hover hover:scale-105 active:scale-95 shadow-lg shadow-primary/25">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">account_balance_wallet</span>
+                        <span>Connect Wallet</span>
+                    </button>
+                    <button class="md:hidden p-2 text-slate-500 hover:text-primary">
+                        <span class="material-symbols-outlined">menu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Layout -->
+    <main class="flex-1 py-10">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <!-- Page Heading -->
+            <div class="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <h1 class="text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">My Collection</h1>
+                    <p class="mt-2 max-w-2xl text-lg text-slate-500">Manage your Web3 access passes and collectibles on
+                        Sepolia Testnet.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button
+                        class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white p-2 text-slate-400 hover:bg-slate-50 hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined">grid_view</span>
+                    </button>
+                    <button
+                        class="inline-flex items-center justify-center rounded-lg border border-transparent p-2 text-slate-300 hover:text-slate-500 transition-colors">
+                        <span class="material-symbols-outlined">view_list</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Filter Tabs (Optional but good for UX) -->
+            <div class="mb-8 border-b border-gray-100">
+                <nav aria-label="Tabs" class="-mb-px flex space-x-8">
+                    <a aria-current="page" class="border-b-2 border-primary px-1 py-4 text-sm font-bold text-primary"
+                        href="#">All Tickets (4)</a>
+                    <a class="border-b-2 border-transparent px-1 py-4 text-sm font-medium text-slate-500 hover:border-slate-300 hover:text-slate-700"
+                        href="#">Upcoming</a>
+                    <a class="border-b-2 border-transparent px-1 py-4 text-sm font-medium text-slate-500 hover:border-slate-300 hover:text-slate-700"
+                        href="#">Past Events</a>
+                </nav>
+            </div>
+            <!-- Grid Container for Tickets -->
+            <div id="ticketsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Dynamic Ticket Cards will be inserted here -->
+            </div>
+            <!-- Loading State -->
+            <div id="loading" class="text-center py-20">
+                <div class="inline-flex items-center gap-3">
+                    <span class="material-symbols-outlined text-4xl text-primary animate-spin">sync</span>
+                    <p class="text-slate-500">Loading your collection from blockchain...</p>
+                </div>
+            </div>
+            <!-- No Tickets State -->
+            <div id="no-tickets" class="text-center py-20 hidden">
+                <div
+                    class="bg-indigo-50 text-indigo-500 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                    <span class="material-symbols-outlined text-4xl">confirmation_number</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">No Tickets Found</h3>
+                <p class="text-slate-500 mb-6">You haven't purchased any tickets yet.</p>
+                <a href="marketplace.html"
+                    class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-primary hover:bg-blue-700 transition-colors">
+                    Browse Marketplace
+                </a>
+            </div>
+            <!-- Error State -->
+            <div id="error-state" class="text-center py-20 hidden">
+                <div
+                    class="bg-red-50 text-red-500 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
+                    <span class="material-symbols-outlined text-4xl">error</span>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2">Error Loading Tickets</h3>
+                <p id="error-message" class="text-slate-500 mb-6">Please make sure you're connected to Sepolia network.
+                </p>
+            </div>
+        </div>
+    </main>
+    <!-- Simple Footer -->
+    <footer class="mt-auto border-t border-gray-100 bg-white py-8">
+        <div class="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+            <p class="text-sm text-slate-400">
+                © 2024 K-Pop NFT Ticketing. Running on Sepolia Testnet.
+            </p>
+        </div>
+    </footer>
+    <script src="js/wallet.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const grid = document.getElementById('ticketsGrid');
+            const loading = document.getElementById('loading');
+            const noTickets = document.getElementById('no-tickets');
+            const errorState = document.getElementById('error-state');
+            const errorMessage = document.getElementById('error-message');
+
+            // Show Loading initially
+            grid.classList.add('hidden');
+            loading.classList.remove('hidden');
+            noTickets.classList.add('hidden');
+            errorState.classList.add('hidden');
+
+            try {
+                console.log("🎫 Loading tickets...");
+
+                // Initialize ContractService (this will also prompt for Sepolia if needed)
+                const initialized = await window.ContractService.init();
+                if (!initialized) {
+                    throw new Error("Failed to initialize contract service. Please connect your wallet.");
+                }
+
+                console.log("✅ Contract initialized, fetching tickets...");
+
+                // Fetch user's tickets
+                const tickets = await window.ContractService.getMyTickets();
+
+                console.log("📦 Tickets found:", tickets.length, tickets);
+
+                // Hide loading
+                loading.classList.add('hidden');
+
+                if (tickets.length === 0) {
+                    noTickets.classList.remove('hidden');
+                } else {
+                    grid.classList.remove('hidden');
+                    grid.innerHTML = ''; // Clear any existing content
+
+                    tickets.forEach(ticket => {
+                        const card = document.createElement('div');
+                        card.className = "group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5";
+                        card.innerHTML = `
+                             <div class="relative aspect-[3/4] w-full overflow-hidden bg-slate-100">
+                                <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                                    style='background-image: url("${ticket.concertImage}");'>
+                                </div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+                                <div class="absolute top-3 right-3 flex gap-2">
+                                    <div class="flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 text-xs font-bold text-slate-900 backdrop-blur-sm">
+                                        <span class="material-symbols-outlined icon-filled text-[14px] text-blue-500">verified</span>
+                                        <span>Official</span>
+                                    </div>
+                                </div>
+                                <div class="absolute bottom-4 left-4 right-4">
+                                    <p class="font-mono text-xs font-medium text-white/80 mb-1">${ticket.concertDate}</p>
+                                    <h3 class="text-xl font-bold leading-tight text-white drop-shadow-sm">${ticket.concertName}</h3>
+                                </div>
+                            </div>
+                            <div class="flex flex-1 flex-col p-5">
+                                <div class="mb-4 flex flex-col gap-2.5">
+                                    <div class="flex items-start gap-3 text-sm text-slate-600">
+                                        <span class="material-symbols-outlined mt-0.5 shrink-0 text-slate-400">location_on</span>
+                                        <span class="leading-relaxed">${ticket.concertVenue}</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-sm text-slate-600">
+                                        <span class="material-symbols-outlined shrink-0 text-slate-400">token</span>
+                                        <span class="font-mono text-xs font-medium bg-slate-100 px-1.5 py-0.5 rounded text-slate-500">Token ID #${ticket.tokenId}</span>
+                                    </div>
+                                     <div class="flex items-center gap-3 text-sm text-slate-600">
+                                        <span class="material-symbols-outlined shrink-0 text-slate-400">event_seat</span>
+                                        <span class="font-mono text-xs font-medium bg-slate-100 px-1.5 py-0.5 rounded text-slate-500">${ticket.seatNumber || 'General Admission'}</span>
+                                    </div>
+                                </div>
+                                <div class="mt-auto flex flex-col gap-3 pt-2 border-t border-slate-50">
+                                    <button class="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-700 hover:shadow-primary/30 active:scale-[0.98]" onclick="window.location.href='verify.html?id=${ticket.tokenId}'">
+                                        <span class="material-symbols-outlined text-[20px]">qr_code_2</span>
+                                        View QR Code
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+
+                    // Update tab counter
+                    const tabCounter = document.querySelector('a[aria-current="page"]');
+                    if (tabCounter) {
+                        tabCounter.textContent = `All Tickets (${tickets.length})`;
+                    }
+                }
+
+            } catch (e) {
+                console.error("❌ Error loading tickets:", e);
+                loading.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                if (errorMessage) {
+                    errorMessage.textContent = e.message || "Unknown error occurred. Please check console.";
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
