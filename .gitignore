@@ -22,14 +22,3 @@ frontend/artifacts/
 frontend/contracts/
 frontend/src/artifacts/
 frontend/src/contracts/
-
-# IDE & OS
-.vscode/
-.idea/
-*.log
-.DS_Store
-Thumbs.db
-
-# Planning & presentation (non-essential)
-Planing.txt
-Materi_Presentasi.txt
